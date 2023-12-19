@@ -1,6 +1,4 @@
-pub fn add(left: usize, right: usize) -> usize {
-    left + right
-}
+pub mod waveforms;
 
 #[cfg(test)]
 mod tests {
@@ -8,7 +6,7 @@ mod tests {
 
     #[test]
     fn it_works() {
-        let result = add(2, 2);
-        assert_eq!(result, 4);
+        let mut wave = waveforms::Waveform::new(44100.0, 1.0);
+        assert_eq!(1.0, 0.0);
     }
 }
