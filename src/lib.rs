@@ -1,5 +1,6 @@
+use std::f32::consts::PI;
 use std::fmt;
-const TWO_PI: f32 = 2.0 * std::f32::consts::PI;
+const TWO_PI: f32 = 2.0 * PI;
 
 pub struct Waveform {
     sample_rate: f32,
@@ -76,11 +77,11 @@ impl Waveform {
     }
 
     pub fn set_amplitude(&mut self, amplitude: f32) {
-            self.amplitude = amplitude;
+        self.amplitude = amplitude;
     }
 
     pub fn set_dc_offset(&mut self, dc_offset: f32) {
-            self.dc_offset = dc_offset;
+        self.dc_offset = dc_offset;
     }
 
     pub fn set_waveform_type(&mut self, waveform_type: WaveformType) {
@@ -97,11 +98,39 @@ impl Waveform {
         }
     }
 
+    pub fn reset(&mut self) {
+        self.phase = 0.0;
+    }
+
     /// Process a single sample of the waveform.
     pub fn process(&mut self) -> f32 {
-        let sample = self.dc_offset + self.amplitude * self.phase.sin();
+        let sample;
+
+        match self.waveform_type {
+            WaveformType::Sine => {
+                sample = self.phase.sin();
+            }
+            WaveformType::Square => {
+                if self.phase < PI {
+                    sample = 1.0;
+                } else {
+                    sample = -1.0;
+                }
+            }
+            WaveformType::Triangle => {
+                if self.phase < PI {
+                    sample = -1.0 + (2.0 * self.phase / PI);
+                } else {
+                    sample = 3.0 - (2.0 * self.phase / PI);
+                }
+            }
+            WaveformType::Sawtooth => {
+                sample = -1.0 + (2.0 * self.phase / TWO_PI);
+            }
+        }
+
         self.phase = (self.phase + self.phase_increment) % TWO_PI;
-        return sample;
+        return self.dc_offset + (sample * self.amplitude);
     }
 
     pub fn waveform_type(&self) -> &WaveformType {
@@ -146,12 +175,7 @@ mod tests {
             wave.process(),
         ];
 
-        let expected_values = [
-            0.0,
-            2.0,
-            0.0,
-            -2.0,
-        ];
+        let expected_values = [0.0, 2.0, 0.0, -2.0];
 
         for (actual, expected) in values.iter().zip(expected_values.iter()) {
             assert!((actual - expected) <= f32::EPSILON);
@@ -173,16 +197,7 @@ mod tests {
             wave.process(),
         ];
 
-        let expected_values = [
-            0.0,
-            1.0,
-            0.0,
-            -1.0,
-            0.0,
-            1.0,
-            0.0,
-            -1.0,
-        ];
+        let expected_values = [0.0, 1.0, 0.0, -1.0, 0.0, 1.0, 0.0, -1.0];
 
         for (actual, expected) in values.iter().zip(expected_values.iter()) {
             assert!((actual - expected) <= f32::EPSILON);
@@ -223,12 +238,7 @@ mod tests {
             wave.process(),
         ];
 
-        let expected_values = [
-            1.0,
-            2.0,
-            1.0,
-            0.0,
-        ];
+        let expected_values = [1.0, 2.0, 1.0, 0.0];
 
         for (actual, expected) in values.iter().zip(expected_values.iter()) {
             assert!((actual - expected) <= f32::EPSILON);
