@@ -126,7 +126,7 @@ mod tests {
 
     #[test]
     fn test_gain() {
-        let mut wave = Waveform::default();
+        let mut wave = Waveform::new(4.0, 1.0);
         wave.set_amplitude(0.0);
 
         let values = [
@@ -136,11 +136,62 @@ mod tests {
             wave.process(),
         ];
         assert_eq!(values, [0.0; 4]);
+
+        wave.set_amplitude(2.0);
+
+        let values = [
+            wave.process(),
+            wave.process(),
+            wave.process(),
+            wave.process(),
+        ];
+
+        let expected_values = [
+            0.0,
+            2.0,
+            0.0,
+            -2.0,
+        ];
+
+        for (actual, expected) in values.iter().zip(expected_values.iter()) {
+            assert!((actual - expected) <= f32::EPSILON);
+        }
+    }
+
+    #[test]
+    fn test_sine() {
+        let mut wave = Waveform::new(4.0, 1.0);
+
+        let values = [
+            wave.process(),
+            wave.process(),
+            wave.process(),
+            wave.process(),
+            wave.process(),
+            wave.process(),
+            wave.process(),
+            wave.process(),
+        ];
+
+        let expected_values = [
+            0.0,
+            1.0,
+            0.0,
+            -1.0,
+            0.0,
+            1.0,
+            0.0,
+            -1.0,
+        ];
+
+        for (actual, expected) in values.iter().zip(expected_values.iter()) {
+            assert!((actual - expected) <= f32::EPSILON);
+        }
     }
 
     #[test]
     fn test_dc_offset() {
-        let mut wave = Waveform::default();
+        let mut wave = Waveform::new(4.0, 1.0);
         wave.set_amplitude(0.0);
         wave.set_dc_offset(1.0);
 
@@ -161,5 +212,26 @@ mod tests {
             wave.process(),
         ];
         assert_eq!(values, [-1.0; 4]);
+
+        wave.set_amplitude(1.0);
+        wave.set_dc_offset(1.0);
+
+        let values = [
+            wave.process(),
+            wave.process(),
+            wave.process(),
+            wave.process(),
+        ];
+
+        let expected_values = [
+            1.0,
+            2.0,
+            1.0,
+            0.0,
+        ];
+
+        for (actual, expected) in values.iter().zip(expected_values.iter()) {
+            assert!((actual - expected) <= f32::EPSILON);
+        }
     }
 }
