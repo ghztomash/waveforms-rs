@@ -86,7 +86,7 @@ impl Waveform {
     }
 
     pub fn process(&mut self) -> f32 {
-        let sample = self.amplitude * self.phase.sin();
+        let sample = self.dc_offset + self.amplitude * self.phase.sin();
         self.phase = (self.phase + self.phase_increment) % TWO_PI;
         return sample;
     }
