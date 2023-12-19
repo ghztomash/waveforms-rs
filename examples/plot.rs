@@ -1,6 +1,6 @@
 use rgb::RGB8;
 use textplots::{Chart, ColorPlot, Shape};
-use waveforms_rs::waveforms::Waveform;
+use waveforms_rs::Waveform;
 
 fn main() {
     let mut wave = Waveform::new(1000.0, 20.0);
