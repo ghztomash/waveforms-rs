@@ -7,6 +7,7 @@ pub struct Waveform {
     phase: f32,
     phase_increment: f32,
     phase_offset: f32,
+    dc_offset: f32,
     running: bool,
     waveform_type: WaveformType,
 }
@@ -33,11 +34,20 @@ impl Waveform {
             phase: 0.0,
             phase_increment: 0.0,
             phase_offset: 0.0,
+            dc_offset: 0.0,
             running: false,
             waveform_type: WaveformType::Sine,
         };
         wave.set_frequency(frequency);
         wave.set_amplitude(1.0);
+        return wave;
+    }
+
+    pub fn new_with_type(sample_rate: f32, frequency: f32, waveform_type: WaveformType) -> Self {
+        let mut wave = Waveform::new(sample_rate, frequency);
+        wave.set_frequency(frequency);
+        wave.set_amplitude(1.0);
+        wave.set_waveform_type(waveform_type);
         return wave;
     }
 
@@ -54,13 +64,15 @@ impl Waveform {
     }
 
     pub fn set_amplitude(&mut self, amplitude: f32) {
-        if amplitude > 1.0 {
-            self.amplitude = 1.0;
-        } else if amplitude < -1.0 {
-            self.amplitude = -1.0;
-        } else {
             self.amplitude = amplitude;
-        }
+    }
+
+    pub fn set_dc_offset(&mut self, dc_offset: f32) {
+            self.dc_offset = dc_offset;
+    }
+
+    pub fn set_waveform_type(&mut self, waveform_type: WaveformType) {
+        self.waveform_type = waveform_type;
     }
 
     pub fn set_phase_offset(&mut self, phase_offset: f32) {
