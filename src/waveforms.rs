@@ -1,3 +1,4 @@
+use std::fmt;
 const TWO_PI: f32 = 2.0 * std::f32::consts::PI;
 
 pub struct Waveform {
@@ -17,6 +18,17 @@ pub enum WaveformType {
     Square,
     Triangle,
     Sawtooth,
+}
+
+impl fmt::Display for WaveformType {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        match self {
+            WaveformType::Sine => write!(f, "Sine"),
+            WaveformType::Square => write!(f, "Square"),
+            WaveformType::Triangle => write!(f, "Triangle"),
+            WaveformType::Sawtooth => write!(f, "Sawtooth"),
+        }
+    }
 }
 
 impl Default for Waveform {
@@ -85,9 +97,18 @@ impl Waveform {
         }
     }
 
+    /// Process a single sample of the waveform.
     pub fn process(&mut self) -> f32 {
         let sample = self.dc_offset + self.amplitude * self.phase.sin();
         self.phase = (self.phase + self.phase_increment) % TWO_PI;
         return sample;
+    }
+
+    pub fn waveform_type(&self) -> &WaveformType {
+        return &self.waveform_type;
+    }
+
+    pub fn waveform_name(&self) -> String {
+        return format!("{}", self.waveform_type);
     }
 }
