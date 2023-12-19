@@ -38,5 +38,15 @@ mod tests {
             wave.process(),
         ];
         assert_eq!(values, [1.0; 4]);
+
+        wave.set_dc_offset(-1.0);
+
+        let values = [
+            wave.process(),
+            wave.process(),
+            wave.process(),
+            wave.process(),
+        ];
+        assert_eq!(values, [-1.0; 4]);
     }
 }
