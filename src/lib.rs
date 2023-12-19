@@ -7,6 +7,7 @@ mod tests {
     #[test]
     fn it_works() {
         let mut wave = waveforms::Waveform::new(44100.0, 1.0);
-        assert_eq!(1.0, 0.0);
+        let value = wave.process();
+        assert_eq!(value, 0.0);
     }
 }
