@@ -10,3 +10,4 @@ anyhow = "1.0.75"
 
 [dev-dependencies]
 textplots = "0.8.4"
+rgb = "0.8.37"

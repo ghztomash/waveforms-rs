@@ -70,6 +70,7 @@ name = "waveforms-rs"
 version = "0.1.0"
 dependencies = [
  "anyhow",
+ "rgb",
  "textplots",
 ]
 
