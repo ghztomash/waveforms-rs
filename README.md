@@ -11,18 +11,25 @@ A simple Rust library for generating various waveforms.
 ## Usage
 
 ```rust
-use waveform_generator::Waveform;
+use waveforms_rs::Waveform;
 
 fn main() {
     // Create a sine waveform with default settings
     let mut wave = Waveform::default();
 
-    // Set waveform properties
-    wave.set_frequency(440.0);
+    // Process a couple samples of the waveform
+    let samples = [
+        wave.process(),
+        wave.process(),
+        wave.process(),
+        wave.process(),
+    ];
 
-    // Process a single sample of the waveform
-    let sample = wave.process();
-
-    println!("Generated sample: {}", sample);
+    println!("Generated samples: {:?}", samples);
 }
 ```
+
+## Running the examples
+
+`cargo run --example basic`
+`cargo run --example plot`
