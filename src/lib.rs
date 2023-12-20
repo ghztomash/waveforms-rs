@@ -1,5 +1,9 @@
+use rand::rngs::SmallRng;
+use rand::{Rng, SeedableRng};
 use std::f32::consts::PI;
 use std::fmt;
+use std::time::{Duration, SystemTime};
+
 const TWO_PI: f32 = 2.0 * PI;
 
 pub struct Waveform {
@@ -10,8 +14,8 @@ pub struct Waveform {
     phase_increment: f32,
     phase_offset: f32,
     dc_offset: f32,
-    running: bool,
     waveform_type: WaveformType,
+    rng: SmallRng,
 }
 
 pub enum WaveformType {
@@ -19,6 +23,7 @@ pub enum WaveformType {
     Square,
     Triangle,
     Sawtooth,
+    Noise,
 }
 
 impl fmt::Display for WaveformType {
@@ -28,6 +33,7 @@ impl fmt::Display for WaveformType {
             WaveformType::Square => write!(f, "Square"),
             WaveformType::Triangle => write!(f, "Triangle"),
             WaveformType::Sawtooth => write!(f, "Sawtooth"),
+            WaveformType::Noise => write!(f, "Noise"),
         }
     }
 }
@@ -40,6 +46,10 @@ impl Default for Waveform {
 
 impl Waveform {
     pub fn new(sample_rate: f32, frequency: f32) -> Self {
+        let seed = SystemTime::now()
+            .elapsed()
+            .unwrap_or(Duration::from_millis(0))
+            .as_millis() as u64;
         let mut wave = Waveform {
             sample_rate,
             frequency: 0.0,
@@ -48,8 +58,8 @@ impl Waveform {
             phase_increment: 0.0,
             phase_offset: 0.0,
             dc_offset: 0.0,
-            running: false,
             waveform_type: WaveformType::Sine,
+            rng: SmallRng::seed_from_u64(seed),
         };
         wave.set_frequency(frequency);
         wave.set_amplitude(1.0);
@@ -126,6 +136,9 @@ impl Waveform {
             }
             WaveformType::Sawtooth => {
                 sample = -1.0 + (2.0 * self.phase / TWO_PI);
+            }
+            WaveformType::Noise => {
+                sample = self.rng.gen::<f32>() * 2.0 - 1.0;
             }
         }
 
