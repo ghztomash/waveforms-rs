@@ -88,12 +88,24 @@ impl Waveform {
         self.phase_increment = (self.frequency * TWO_PI) / self.sample_rate;
     }
 
+    pub fn frequency(&self) -> f32 {
+        self.frequency
+    }
+
     pub fn set_amplitude(&mut self, amplitude: f32) {
         self.amplitude = amplitude;
     }
 
+    pub fn amplitude(&self) -> f32 {
+        self.amplitude
+    }
+
     pub fn set_dc_offset(&mut self, dc_offset: f32) {
         self.dc_offset = dc_offset;
+    }
+
+    pub fn dc_offset(&self) -> f32 {
+        self.dc_offset
     }
 
     pub fn set_waveform_type(&mut self, waveform_type: WaveformType) {
@@ -108,6 +120,10 @@ impl Waveform {
         } else {
             self.phase_offset = phase_offset;
         }
+    }
+
+    pub fn phase_offset(&self) -> f32 {
+        self.phase_offset
     }
 
     pub fn reset(&mut self) {
