@@ -6,6 +6,7 @@ use std::time::{Duration, SystemTime};
 
 const TWO_PI: f32 = 2.0 * PI;
 
+#[derive(Debug)]
 pub struct Waveform {
     sample_rate: f32,
     frequency: f32,
@@ -18,6 +19,7 @@ pub struct Waveform {
     rng: SmallRng,
 }
 
+#[derive(Debug)]
 pub enum WaveformType {
     Sine,
     Square,
