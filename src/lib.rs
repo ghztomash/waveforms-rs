@@ -19,8 +19,9 @@ pub struct Waveform {
     rng: SmallRng,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Default, PartialEq, Clone, Copy)]
 pub enum WaveformType {
+    #[default]
     Sine,
     Square,
     Triangle,
