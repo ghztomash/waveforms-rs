@@ -40,6 +40,20 @@ impl fmt::Display for WaveformType {
     }
 }
 
+impl TryFrom<u8> for WaveformType {
+    type Error = ();
+    fn try_from(value: u8) -> Result<Self, Self::Error> {
+        match value {
+            0 => Ok(WaveformType::Sine),
+            1 => Ok(WaveformType::Square),
+            2 => Ok(WaveformType::Triangle),
+            3 => Ok(WaveformType::Sawtooth),
+            4 => Ok(WaveformType::Noise),
+            _ => Err(()),
+        }
+    }
+}
+
 impl Default for Waveform {
     fn default() -> Self {
         return Waveform::new(44100.0, 440.0);
