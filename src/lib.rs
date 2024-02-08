@@ -41,9 +41,9 @@ impl fmt::Display for WaveformType {
     }
 }
 
-impl TryFrom<u8> for WaveformType {
+impl TryFrom<usize> for WaveformType {
     type Error = ();
-    fn try_from(value: u8) -> Result<Self, Self::Error> {
+    fn try_from(value: usize) -> Result<Self, Self::Error> {
         match value {
             0 => Ok(WaveformType::Sine),
             1 => Ok(WaveformType::Square),
